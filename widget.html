@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>VibeNote — Home Screen Notes &amp; Tasks Widget</title>
+    <meta name="theme-color" content="#0f172a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="VibeNote">
+    
+    <!-- Tailwind CSS -->
+    
+    
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css">
+
+    
+
+    <style>
+        /* Custom Scrollbar Hiding for Clean Widget Aesthetic */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Smooth Slide Transitions */
+        .slide-track {
+            transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* Glassmorphism Helpers */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.14);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+        
+        .glass-panel-light {
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(15, 23, 42, 0.08);
+        }
+
+        /* Subtle Ambient Floating Animation */
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+        .ambient-blob {
+            animation: pulseGlow 8s ease-in-out infinite;
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:Inter, sans-serif;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.pointer-events-none{pointer-events:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.-bottom-24{bottom:-6rem}.-left-24{left:-6rem}.-right-24{right:-6rem}.-top-24{top:-6rem}.bottom-14{bottom:3.5rem}.left-1\/2{left:50%}.z-0{z-index:0}.z-10{z-index:10}.z-20{z-index:20}.z-40{z-index:40}.z-50{z-index:50}.mb-1{margin-bottom:0.25rem}.mb-1\.5{margin-bottom:0.375rem}.mb-2{margin-bottom:0.5rem}.mb-2\.5{margin-bottom:0.625rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mt-2{margin-top:0.5rem}.mt-2\.5{margin-top:0.625rem}.mt-4{margin-top:1rem}.mb-0\.5{margin-bottom:0.125rem}.mt-0\.5{margin-top:0.125rem}.mt-1{margin-top:0.25rem}.line-clamp-3{overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3}.block{display:block}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.h-1\.5{height:0.375rem}.h-10{height:2.5rem}.h-2\.5{height:0.625rem}.h-8{height:2rem}.h-9{height:2.25rem}.h-96{height:24rem}.h-\[540px\]{height:540px}.h-full{height:100%}.h-12{height:3rem}.h-5{height:1.25rem}.h-7{height:1.75rem}.max-h-\[90vh\]{max-height:90vh}.min-h-screen{min-height:100vh}.min-h-0{min-height:0px}.w-1\.5{width:0.375rem}.w-1\/3{width:33.333333%}.w-10{width:2.5rem}.w-2\.5{width:0.625rem}.w-5{width:1.25rem}.w-8{width:2rem}.w-9{width:2.25rem}.w-96{width:24rem}.w-\[300\%\]{width:300%}.w-full{width:100%}.w-7{width:1.75rem}.min-w-0{min-width:0px}.max-w-md{max-width:28rem}.max-w-sm{max-width:24rem}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}.-translate-x-1\/2{--tw-translate-x:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite}.cursor-pointer{cursor:pointer}.touch-pan-y{--tw-pan-y:pan-y;touch-action:var(--tw-pan-x) var(--tw-pan-y) var(--tw-pinch-zoom)}.resize-none{resize:none}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.flex-col{flex-direction:column}.items-start{align-items:flex-start}.items-end{align-items:flex-end}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-1\.5{gap:0.375rem}.gap-2{gap:0.5rem}.gap-2\.5{gap:0.625rem}.gap-3{gap:0.75rem}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-2\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.625rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.625rem * var(--tw-space-y-reverse))}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.overflow-x-hidden{overflow-x:hidden}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.whitespace-nowrap{white-space:nowrap}.whitespace-pre-line{white-space:pre-line}.rounded-2xl{border-radius:1rem}.rounded-3xl{border-radius:1.5rem}.rounded-\[2\.25rem\]{border-radius:2.25rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-0{border-width:0px}.border-2{border-width:2px}.border-t{border-top-width:1px}.border-dashed{border-style:dashed}.border-amber-500\/30{border-color:rgb(245 158 11 / 0.3)}.border-indigo-400{--tw-border-opacity:1;border-color:rgb(129 140 248 / var(--tw-border-opacity, 1))}.border-indigo-400\/30{border-color:rgb(129 140 248 / 0.3)}.border-slate-700\/60{border-color:rgb(51 65 85 / 0.6)}.border-slate-800{--tw-border-opacity:1;border-color:rgb(30 41 59 / var(--tw-border-opacity, 1))}.border-transparent{border-color:transparent}.border-white\/10{border-color:rgb(255 255 255 / 0.1)}.border-white\/15{border-color:rgb(255 255 255 / 0.15)}.border-white\/20{border-color:rgb(255 255 255 / 0.2)}.border-white\/30{border-color:rgb(255 255 255 / 0.3)}.border-amber-400\/40{border-color:rgb(251 191 36 / 0.4)}.border-emerald-400{--tw-border-opacity:1;border-color:rgb(52 211 153 / var(--tw-border-opacity, 1))}.border-rose-400\/40{border-color:rgb(251 113 133 / 0.4)}.border-white\/25{border-color:rgb(255 255 255 / 0.25)}.bg-slate-950{--tw-bg-opacity:1;background-color:rgb(2 6 23 / var(--tw-bg-opacity, 1))}.bg-amber-400\/20{background-color:rgb(251 191 36 / 0.2)}.bg-amber-500\/10{background-color:rgb(245 158 11 / 0.1)}.bg-black\/20{background-color:rgb(0 0 0 / 0.2)}.bg-black\/80{background-color:rgb(0 0 0 / 0.8)}.bg-emerald-400{--tw-bg-opacity:1;background-color:rgb(52 211 153 / var(--tw-bg-opacity, 1))}.bg-emerald-500{--tw-bg-opacity:1;background-color:rgb(16 185 129 / var(--tw-bg-opacity, 1))}.bg-emerald-600\/15{background-color:rgb(5 150 105 / 0.15)}.bg-indigo-500{--tw-bg-opacity:1;background-color:rgb(99 102 241 / var(--tw-bg-opacity, 1))}.bg-indigo-500\/15{background-color:rgb(99 102 241 / 0.15)}.bg-indigo-500\/20{background-color:rgb(99 102 241 / 0.2)}.bg-indigo-500\/30{background-color:rgb(99 102 241 / 0.3)}.bg-indigo-600{--tw-bg-opacity:1;background-color:rgb(79 70 229 / var(--tw-bg-opacity, 1))}.bg-indigo-600\/20{background-color:rgb(79 70 229 / 0.2)}.bg-rose-500\/20{background-color:rgb(244 63 94 / 0.2)}.bg-slate-800{--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.bg-slate-800\/70{background-color:rgb(30 41 59 / 0.7)}.bg-slate-900{--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.bg-slate-900\/95{background-color:rgb(15 23 42 / 0.95)}.bg-slate-950\/85{background-color:rgb(2 6 23 / 0.85)}.bg-slate-950\/90{background-color:rgb(2 6 23 / 0.9)}.bg-transparent{background-color:transparent}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-white\/10{background-color:rgb(255 255 255 / 0.1)}.bg-white\/20{background-color:rgb(255 255 255 / 0.2)}.bg-white\/40{background-color:rgb(255 255 255 / 0.4)}.bg-amber-500\/30{background-color:rgb(245 158 11 / 0.3)}.bg-black\/15{background-color:rgb(0 0 0 / 0.15)}.bg-rose-500\/30{background-color:rgb(244 63 94 / 0.3)}.bg-white\/15{background-color:rgb(255 255 255 / 0.15)}.bg-cover{background-size:cover}.bg-center{background-position:center}.p-3{padding:0.75rem}.p-1{padding:0.25rem}.p-2\.5{padding:0.625rem}.p-3\.5{padding:0.875rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.px-1{padding-left:0.25rem;padding-right:0.25rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-2\.5{padding-left:0.625rem;padding-right:0.625rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-3\.5{padding-left:0.875rem;padding-right:0.875rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-3\.5{padding-top:0.875rem;padding-bottom:0.875rem}.pb-2{padding-bottom:0.5rem}.pb-3{padding-bottom:0.75rem}.pb-4{padding-bottom:1rem}.pt-5{padding-top:1.25rem}.text-left{text-align:left}.font-display{font-family:Plus Jakarta Sans, sans-serif}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.leading-relaxed{line-height:1.625}.leading-snug{line-height:1.375}.tracking-tight{letter-spacing:-0.025em}.tracking-wider{letter-spacing:0.05em}.tracking-widest{letter-spacing:0.1em}.text-slate-100{--tw-text-opacity:1;color:rgb(241 245 249 / var(--tw-text-opacity, 1))}.text-amber-200{--tw-text-opacity:1;color:rgb(253 230 138 / var(--tw-text-opacity, 1))}.text-amber-300{--tw-text-opacity:1;color:rgb(252 211 77 / var(--tw-text-opacity, 1))}.text-emerald-300{--tw-text-opacity:1;color:rgb(110 231 183 / var(--tw-text-opacity, 1))}.text-indigo-300{--tw-text-opacity:1;color:rgb(165 180 252 / var(--tw-text-opacity, 1))}.text-indigo-400{--tw-text-opacity:1;color:rgb(129 140 248 / var(--tw-text-opacity, 1))}.text-rose-300{--tw-text-opacity:1;color:rgb(253 164 175 / var(--tw-text-opacity, 1))}.text-slate-300{--tw-text-opacity:1;color:rgb(203 213 225 / var(--tw-text-opacity, 1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.text-slate-950{--tw-text-opacity:1;color:rgb(2 6 23 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-white\/80{color:rgb(255 255 255 / 0.8)}.text-current{color:currentColor}.text-rose-200{--tw-text-opacity:1;color:rgb(254 205 211 / var(--tw-text-opacity, 1))}.underline{-webkit-text-decoration-line:underline;text-decoration-line:underline}.line-through{-webkit-text-decoration-line:line-through;text-decoration-line:line-through}.placeholder-slate-400::placeholder{--tw-placeholder-opacity:1;color:rgb(148 163 184 / var(--tw-placeholder-opacity, 1))}.opacity-0{opacity:0}.opacity-60{opacity:0.6}.opacity-75{opacity:0.75}.opacity-80{opacity:0.8}.opacity-95{opacity:0.95}.opacity-55{opacity:0.55}.opacity-85{opacity:0.85}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-emerald-500\/25{--tw-shadow-color:rgb(16 185 129 / 0.25);--tw-shadow:var(--tw-shadow-colored)}.shadow-indigo-500\/30{--tw-shadow-color:rgb(99 102 241 / 0.3);--tw-shadow:var(--tw-shadow-colored)}.blur-3xl{--tw-blur:blur(64px);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-xl{--tw-backdrop-blur:blur(24px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-opacity{transition-property:opacity;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-200{transition-duration:200ms}.duration-300{transition-duration:300ms}.duration-500{transition-duration:500ms}.selection\:bg-indigo-500 *::selection{--tw-bg-opacity:1;background-color:rgb(99 102 241 / var(--tw-bg-opacity, 1))}.selection\:text-white *::selection{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.selection\:bg-indigo-500::selection{--tw-bg-opacity:1;background-color:rgb(99 102 241 / var(--tw-bg-opacity, 1))}.selection\:text-white::selection{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.hover\:scale-105:hover{--tw-scale-x:1.05;--tw-scale-y:1.05;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:bg-amber-400\/30:hover{background-color:rgb(251 191 36 / 0.3)}.hover\:bg-emerald-400:hover{--tw-bg-opacity:1;background-color:rgb(52 211 153 / var(--tw-bg-opacity, 1))}.hover\:bg-indigo-400:hover{--tw-bg-opacity:1;background-color:rgb(129 140 248 / var(--tw-bg-opacity, 1))}.hover\:bg-indigo-500:hover{--tw-bg-opacity:1;background-color:rgb(99 102 241 / var(--tw-bg-opacity, 1))}.hover\:bg-indigo-500\/25:hover{background-color:rgb(99 102 241 / 0.25)}.hover\:bg-rose-500\/30:hover{background-color:rgb(244 63 94 / 0.3)}.hover\:bg-slate-100:hover{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-200:hover{--tw-bg-opacity:1;background-color:rgb(226 232 240 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-700:hover{--tw-bg-opacity:1;background-color:rgb(51 65 85 / var(--tw-bg-opacity, 1))}.hover\:bg-white\/15:hover{background-color:rgb(255 255 255 / 0.15)}.hover\:bg-white\/20:hover{background-color:rgb(255 255 255 / 0.2)}.hover\:bg-white\/25:hover{background-color:rgb(255 255 255 / 0.25)}.hover\:bg-white\/30:hover{background-color:rgb(255 255 255 / 0.3)}.hover\:bg-black\/25:hover{background-color:rgb(0 0 0 / 0.25)}.hover\:text-indigo-200:hover{--tw-text-opacity:1;color:rgb(199 210 254 / var(--tw-text-opacity, 1))}.hover\:text-white:hover{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.hover\:text-rose-300:hover{--tw-text-opacity:1;color:rgb(253 164 175 / var(--tw-text-opacity, 1))}.hover\:opacity-100:hover{opacity:1}.focus\:border-indigo-400:focus{--tw-border-opacity:1;border-color:rgb(129 140 248 / var(--tw-border-opacity, 1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.active\:scale-90:active{--tw-scale-x:.9;--tw-scale-y:.9;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.active\:scale-95:active{--tw-scale-x:.95;--tw-scale-y:.95;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@media (min-width: 640px){.sm\:h-\[580px\]{height:580px}.sm\:p-6{padding:1.5rem}}</style><link rel="manifest" href="widget.webmanifest">
+<link rel="icon" href="widget-icon.png" type="image/png">
+<link rel="apple-touch-icon" href="widget-icon.png">
+<style>.opacity-100{opacity:1}.opacity-70{opacity:.7}.py-4{padding-top:1rem;padding-bottom:1rem}.text-center{text-align:center}</style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center justify-center p-3 sm:p-6 selection:bg-indigo-500 selection:text-white overflow-x-hidden">
+
+    <!-- Background Ambient Decoration (Outside Widget) -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div class="ambient-blob absolute -top-24 -left-24 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl"></div>
+        <div class="ambient-blob absolute -bottom-24 -right-24 w-96 h-96 bg-emerald-600/15 rounded-full blur-3xl" style="animation-delay: 4s;"></div>
+    </div>
+
+    <!-- Top Utility Bar (Outside Widget Frame) -->
+    <div class="relative z-10 w-full max-w-md flex items-center justify-between mb-3 px-1">
+        <div class="flex items-center gap-2">
+            <span class="inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="text-xs font-medium tracking-wider uppercase text-slate-400">Home Screen Widget</span>
+        </div>
+        <button id="openInstallGuideBtn" class="text-xs font-medium text-indigo-300 hover:text-indigo-200 bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-400/30 px-3 py-1.5 rounded-full flex items-center gap-1.5 transition active:scale-95">
+            <i class="ph ph-device-mobile-camera text-sm"></i>
+            <span>Add to Home Screen</span>
+        </button>
+    </div>
+
+    <!-- MAIN WIDGET CONTAINER (iOS/Android Medium-Large Widget Proportions) -->
+    <main id="widgetContainer" class="relative z-10 w-full max-w-md h-[540px] sm:h-[580px] rounded-[2.25rem] shadow-2xl overflow-hidden flex flex-col transition-all duration-500 border border-white/20 text-white" style="background: linear-gradient(135deg, #1e1b4b 0%, #312e81 45%, #0f172a 100%);">
+        
+        <!-- Optional Background Image Overlay Layer -->
+        <div id="widgetBgImageLayer" class="absolute inset-0 bg-cover bg-center opacity-0 transition-opacity duration-500 pointer-events-none" style="opacity: 0;"></div>
+        <div id="widgetScrimLayer" class="absolute inset-0 bg-black/20 pointer-events-none transition-opacity duration-300" style="opacity: 0.2;"></div>
+
+        <!-- WIDGET HEADER -->
+        <header class="relative z-20 px-5 pt-5 pb-3 flex items-center justify-between">
+            <div>
+                <p id="widgetDateDisplay" class="text-[11px] font-semibold uppercase tracking-widest opacity-75">Friday, Nov 13</p>
+                <h1 class="font-display text-xl font-bold tracking-tight flex items-center gap-2">
+                    <span id="widgetTitle">My Space</span>
+                    <span id="pendingBadge" class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-white/20 backdrop-blur-md">2 tasks</span>
+                </h1>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center gap-2">
+                <!-- Customize Background Button -->
+                <button id="openThemeModalBtn" title="Customize Background" class="w-10 h-10 rounded-2xl glass-panel flex items-center justify-center hover:bg-white/25 transition active:scale-90">
+                    <i class="ph ph-palette text-lg"></i>
+                </button>
+                <!-- Quick Add Button -->
+                <button id="openAddModalBtn" title="New Note or Task" class="w-10 h-10 rounded-2xl bg-white text-slate-900 shadow-lg flex items-center justify-center hover:bg-slate-100 transition active:scale-90 font-bold">
+                    <i class="ph ph-plus text-lg font-bold"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- SLIDE SEGMENTED CONTROL / PILLS -->
+        <div class="relative z-20 px-5 pb-3">
+            <div class="p-1 rounded-2xl glass-panel grid grid-cols-3 gap-1 text-xs font-semibold">
+                <button data-slide="0" class="slide-tab py-2 rounded-xl transition-all duration-200 bg-white text-slate-900 shadow-sm flex items-center justify-center gap-1.5">
+                    <i class="ph ph-squares-four text-sm"></i>
+                    <span>Overview</span>
+                </button>
+                <button data-slide="1" class="slide-tab py-2 rounded-xl transition-all duration-200 opacity-80 hover:opacity-100 flex items-center justify-center gap-1.5">
+                    <i class="ph ph-note-pencil text-sm"></i>
+                    <span>Notes</span>
+                </button>
+                <button data-slide="2" class="slide-tab py-2 rounded-xl transition-all duration-200 opacity-80 hover:opacity-100 flex items-center justify-center gap-1.5">
+                    <i class="ph ph-calendar-check text-sm"></i>
+                    <span>Schedule</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- SWIPEABLE SLIDE VIEWPORT -->
+        <div id="slideViewport" class="relative z-20 flex-1 w-full overflow-hidden touch-pan-y">
+            <div id="slideTrack" class="slide-track flex h-full w-[300%]" style="transform: translateX(0%);">
+                
+                <!-- SLIDE 1: OVERVIEW (Pinned Note + Up Next Tasks) -->
+                <section class="w-1/3 h-full px-5 pb-4 overflow-y-auto no-scrollbar flex flex-col gap-3">
+                    <!-- Quick Pinned Note Card -->
+                    <div class="rounded-3xl p-4 glass-panel flex flex-col gap-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[11px] font-bold uppercase tracking-wider opacity-75 flex items-center gap-1">
+                                <i class="ph-fill ph-push-pin text-amber-300"></i> Pinned Quick Note
+                            </span>
+                            <button onclick="switchSlide(1)" class="text-[11px] font-semibold underline opacity-80 hover:opacity-100">All Notes</button>
+                        </div>
+                        <div id="overviewPinnedNote" class="text-sm leading-relaxed opacity-95 font-medium">
+                    <div class="font-bold text-sm mb-0.5">Weekly Focus Goals</div>
+                    <div class="text-xs opacity-85 line-clamp-3 whitespace-pre-line">1. Finish widget UI polish
+2. Review design tokens
+3. Evening walk at 6 PM</div>
+                </div>
+                    </div>
+
+                    <!-- Today's Scheduled Tasks Preview -->
+                    <div class="rounded-3xl p-4 glass-panel flex-1 flex flex-col min-h-0">
+                        <div class="flex items-center justify-between mb-2.5">
+                            <span class="text-[11px] font-bold uppercase tracking-wider opacity-75 flex items-center gap-1">
+                                <i class="ph-fill ph-clock-countdown text-emerald-300"></i> Up Next Schedule
+                            </span>
+                            <button onclick="switchSlide(2)" class="text-[11px] font-semibold underline opacity-80 hover:opacity-100">Full Schedule</button>
+                        </div>
+                        <div id="overviewTasksList" class="flex-1 overflow-y-auto no-scrollbar space-y-2">
+                <div class="flex items-center justify-between gap-2.5 p-2.5 rounded-2xl bg-black/15 hover:bg-black/25 transition">
+                    <button onclick="toggleTask('t1')" class="flex items-center gap-2.5 text-left flex-1 min-w-0">
+                        <span class="w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition border-current/50">
+                            
+                        </span>
+                        <span class="text-xs font-medium truncate ">Design Sync &amp; Prototype Review</span>
+                    </button>
+                    <span class="text-[10px] font-semibold px-2 py-0.5 rounded-lg bg-white/15 shrink-0">
+                        2:30 PM
+                    </span>
+                </div>
+            
+                <div class="flex items-center justify-between gap-2.5 p-2.5 rounded-2xl bg-black/15 hover:bg-black/25 transition">
+                    <button onclick="toggleTask('t2')" class="flex items-center gap-2.5 text-left flex-1 min-w-0">
+                        <span class="w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition border-current/50">
+                            
+                        </span>
+                        <span class="text-xs font-medium truncate ">Evening Workout &amp; Stretch</span>
+                    </button>
+                    <span class="text-[10px] font-semibold px-2 py-0.5 rounded-lg bg-white/15 shrink-0">
+                        6:00 PM
+                    </span>
+                </div>
+            
+                <div class="flex items-center justify-between gap-2.5 p-2.5 rounded-2xl bg-black/15 hover:bg-black/25 transition">
+                    <button onclick="toggleTask('t3')" class="flex items-center gap-2.5 text-left flex-1 min-w-0">
+                        <span class="w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition bg-emerald-400 border-emerald-400 text-slate-950">
+                            <i class="ph-bold ph-check text-xs"></i>
+                        </span>
+                        <span class="text-xs font-medium truncate line-through opacity-55">Submit Sprint Summary</span>
+                    </button>
+                    <span class="text-[10px] font-semibold px-2 py-0.5 rounded-lg bg-white/15 shrink-0">
+                        8:00 PM
+                    </span>
+                </div>
+            </div>
+                    </div>
+                </section>
+
+                <!-- SLIDE 2: NOTES CAROUSEL & SCRATCHPAD -->
+                <section class="w-1/3 h-full px-5 pb-4 overflow-y-auto no-scrollbar flex flex-col gap-3">
+                    <!-- Instant Scratchpad -->
+                    <div class="rounded-3xl p-3.5 glass-panel">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-[11px] font-bold uppercase tracking-wider opacity-75">Quick Scratchpad</span>
+                            <span id="scratchSavedIndicator" class="text-[10px] opacity-60">Auto-saved</span>
+                        </div>
+                        <textarea id="quickScratchpad" rows="2" placeholder="Jot down anything fast..." class="w-full bg-transparent text-sm placeholder-current/50 focus:outline-none resize-none leading-snug"></textarea>
+                    </div>
+
+                    <!-- Saved Notes List -->
+                    <div class="flex items-center justify-between px-1">
+                        <span class="text-xs font-bold uppercase tracking-wider opacity-80">Saved Notes</span>
+                        <button onclick="openAddModal('note')" class="text-xs font-semibold px-2.5 py-1 rounded-xl bg-white/20 hover:bg-white/30 transition flex items-center gap-1">
+                            <i class="ph ph-plus"></i> Add Note
+                        </button>
+                    </div>
+                    <div id="notesListContainer" class="space-y-2.5 pb-2">
+                <div class="rounded-3xl p-4 glass-panel transition hover:bg-white/20">
+                    <div class="flex items-start justify-between gap-2 mb-1.5">
+                        <h3 class="font-bold text-sm leading-snug">Weekly Focus Goals</h3>
+                        <div class="flex items-center gap-1 shrink-0">
+                            <button onclick="togglePinNote('n1')" title="Pin to Overview" class="w-7 h-7 rounded-xl hover:bg-white/20 flex items-center justify-center transition text-amber-300">
+                                <i class="ph-fill ph-push-pin text-sm"></i>
+                            </button>
+                            <button onclick="deleteNote('n1')" title="Delete Note" class="w-7 h-7 rounded-xl hover:bg-rose-500/30 text-rose-300 flex items-center justify-center transition">
+                                <i class="ph ph-trash text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-xs opacity-85 whitespace-pre-line leading-relaxed">1. Finish widget UI polish
+2. Review design tokens
+3. Evening walk at 6 PM</p>
+                </div>
+            
+                <div class="rounded-3xl p-4 glass-panel transition hover:bg-white/20">
+                    <div class="flex items-start justify-between gap-2 mb-1.5">
+                        <h3 class="font-bold text-sm leading-snug">Book Ideas</h3>
+                        <div class="flex items-center gap-1 shrink-0">
+                            <button onclick="togglePinNote('n2')" title="Pin to Overview" class="w-7 h-7 rounded-xl hover:bg-white/20 flex items-center justify-center transition opacity-60">
+                                <i class="ph ph-push-pin text-sm"></i>
+                            </button>
+                            <button onclick="deleteNote('n2')" title="Delete Note" class="w-7 h-7 rounded-xl hover:bg-rose-500/30 text-rose-300 flex items-center justify-center transition">
+                                <i class="ph ph-trash text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-xs opacity-85 whitespace-pre-line leading-relaxed">Atomic Habits &amp; The Creative Act — take notes on environment design.</p>
+                </div>
+            </div>
+                </section>
+
+                <!-- SLIDE 3: SCHEDULED TASKS -->
+                <section class="w-1/3 h-full px-5 pb-4 overflow-y-auto no-scrollbar flex flex-col gap-3">
+                    <div class="flex items-center justify-between px-1">
+                        <span class="text-xs font-bold uppercase tracking-wider opacity-80">Scheduled Tasks</span>
+                        <button onclick="openAddModal('task')" class="text-xs font-semibold px-2.5 py-1 rounded-xl bg-white/20 hover:bg-white/30 transition flex items-center gap-1">
+                            <i class="ph ph-plus"></i> Schedule Task
+                        </button>
+                    </div>
+                    <div id="scheduleListContainer" class="space-y-2.5 pb-2">
+                    <div class="rounded-3xl p-3.5 glass-panel flex items-center justify-between gap-3 transition">
+                        <button onclick="toggleTask('t1')" class="flex items-start gap-3 text-left flex-1 min-w-0">
+                            <span class="mt-0.5 w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition border-current/60">
+                                
+                            </span>
+                            <div class="min-w-0 flex-1">
+                                <div class="text-sm font-semibold truncate ">Design Sync &amp; Prototype Review</div>
+                                <div class="flex items-center gap-2 mt-1 text-[11px] opacity-80">
+                                    <span class="flex items-center gap-1"><i class="ph ph-clock"></i> 2:30 PM</span>
+                                    <span>•</span>
+                                    <span>Today</span>
+                                </div>
+                            </div>
+                        </button>
+                        <div class="flex flex-col items-end gap-1.5 shrink-0">
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border bg-amber-500/30 text-amber-200 border-amber-400/40">Important</span>
+                            <button onclick="deleteTask('t1')" class="text-xs opacity-60 hover:opacity-100 hover:text-rose-300 transition p-1">
+                                <i class="ph ph-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                
+                    <div class="rounded-3xl p-3.5 glass-panel flex items-center justify-between gap-3 transition">
+                        <button onclick="toggleTask('t2')" class="flex items-start gap-3 text-left flex-1 min-w-0">
+                            <span class="mt-0.5 w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition border-current/60">
+                                
+                            </span>
+                            <div class="min-w-0 flex-1">
+                                <div class="text-sm font-semibold truncate ">Evening Workout &amp; Stretch</div>
+                                <div class="flex items-center gap-2 mt-1 text-[11px] opacity-80">
+                                    <span class="flex items-center gap-1"><i class="ph ph-clock"></i> 6:00 PM</span>
+                                    <span>•</span>
+                                    <span>Today</span>
+                                </div>
+                            </div>
+                        </button>
+                        <div class="flex flex-col items-end gap-1.5 shrink-0">
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border bg-white/15 text-current border-white/20">Normal</span>
+                            <button onclick="deleteTask('t2')" class="text-xs opacity-60 hover:opacity-100 hover:text-rose-300 transition p-1">
+                                <i class="ph ph-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                
+                    <div class="rounded-3xl p-3.5 glass-panel flex items-center justify-between gap-3 transition">
+                        <button onclick="toggleTask('t3')" class="flex items-start gap-3 text-left flex-1 min-w-0">
+                            <span class="mt-0.5 w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition bg-emerald-400 border-emerald-400 text-slate-950">
+                                <i class="ph-bold ph-check text-xs"></i>
+                            </span>
+                            <div class="min-w-0 flex-1">
+                                <div class="text-sm font-semibold truncate line-through opacity-55">Submit Sprint Summary</div>
+                                <div class="flex items-center gap-2 mt-1 text-[11px] opacity-80">
+                                    <span class="flex items-center gap-1"><i class="ph ph-clock"></i> 8:00 PM</span>
+                                    <span>•</span>
+                                    <span>Today</span>
+                                </div>
+                            </div>
+                        </button>
+                        <div class="flex flex-col items-end gap-1.5 shrink-0">
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border bg-rose-500/30 text-rose-200 border-rose-400/40">Urgent</span>
+                            <button onclick="deleteTask('t3')" class="text-xs opacity-60 hover:opacity-100 hover:text-rose-300 transition p-1">
+                                <i class="ph ph-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                </section>
+
+            </div>
+        </div>
+
+        <!-- WIDGET FOOTER: SLIDE DOTS & SWIPE HINT -->
+        <footer class="relative z-20 px-5 py-3 flex items-center justify-between border-t border-white/10 text-[11px] opacity-80">
+            <span id="slideHintText">Swipe left/right to switch views</span>
+            <div class="flex items-center gap-1.5">
+                <button onclick="switchSlide(0)" class="slide-dot w-5 h-1.5 rounded-full bg-white transition-all duration-300"></button>
+                <button onclick="switchSlide(1)" class="slide-dot w-1.5 h-1.5 rounded-full bg-white/40 transition-all duration-300"></button>
+                <button onclick="switchSlide(2)" class="slide-dot w-1.5 h-1.5 rounded-full bg-white/40 transition-all duration-300"></button>
+            </div>
+        </footer>
+
+        <!-- ========================================================= -->
+        <!-- IN-WIDGET MODAL 1: ADD / EDIT NOTE OR SCHEDULED TASK      -->
+        <!-- ========================================================= -->
+        <div id="addModal" class="hidden absolute inset-0 z-40 bg-slate-950/85 backdrop-blur-xl p-5 flex flex-col justify-between text-white transition-all">
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <h2 id="addModalTitle" class="font-display text-lg font-bold">Create Item</h2>
+                    <button id="closeAddModalBtn" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center">
+                        <i class="ph ph-x text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Type Switcher -->
+                <div class="grid grid-cols-2 gap-2 p-1 rounded-2xl bg-white/10 mb-4 text-xs font-semibold">
+                    <button type="button" id="typeNoteBtn" class="py-2.5 rounded-xl bg-white text-slate-900 transition">Note</button>
+                    <button type="button" id="typeTaskBtn" class="py-2.5 rounded-xl text-white/80 hover:text-white transition">Scheduled Task</button>
+                </div>
+
+                <!-- Form Fields -->
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Title</label>
+                        <input id="itemTitleInput" type="text" placeholder="e.g., Project brainstorm or Team call" class="w-full px-3.5 py-2.5 rounded-2xl bg-white/10 border border-white/15 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-400">
+                    </div>
+
+                    <div id="noteBodyGroup">
+                        <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Note Details</label>
+                        <textarea id="itemBodyInput" rows="4" placeholder="Write your note here..." class="w-full px-3.5 py-2.5 rounded-2xl bg-white/10 border border-white/15 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-400 resize-none"></textarea>
+                    </div>
+
+                    <div id="taskScheduleGroup" class="hidden space-y-3">
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <div>
+                                <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Date</label>
+                                <input id="taskDateInput" type="date" class="w-full px-3 py-2.5 rounded-2xl bg-white/10 border border-white/15 text-xs text-white focus:outline-none focus:border-indigo-400">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Time</label>
+                                <input id="taskTimeInput" type="time" class="w-full px-3 py-2.5 rounded-2xl bg-white/10 border border-white/15 text-xs text-white focus:outline-none focus:border-indigo-400">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Priority Tag</label>
+                            <div class="grid grid-cols-3 gap-2 text-xs">
+                                <button type="button" data-priority="Normal" class="priority-btn py-2 rounded-xl bg-indigo-500/30 border border-indigo-400 font-semibold">Normal</button>
+                                <button type="button" data-priority="Important" class="priority-btn py-2 rounded-xl bg-white/10 border border-transparent text-slate-300">Important</button>
+                                <button type="button" data-priority="Urgent" class="priority-btn py-2 rounded-xl bg-white/10 border border-transparent text-slate-300">Urgent</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button id="saveItemBtn" class="w-full py-3.5 rounded-2xl bg-indigo-500 hover:bg-indigo-400 text-white font-bold text-sm shadow-lg shadow-indigo-500/30 transition active:scale-98">
+                Save to Widget
+            </button>
+        </div>
+
+        <!-- ========================================================= -->
+        <!-- IN-WIDGET MODAL 2: CUSTOMIZE BACKGROUND & WIDGET STYLE    -->
+        <!-- ========================================================= -->
+        <div id="themeModal" class="hidden absolute inset-0 z-40 bg-slate-950/90 backdrop-blur-xl p-5 flex flex-col justify-between text-white overflow-y-auto no-scrollbar">
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="font-display text-lg font-bold">Customize Widget</h2>
+                    <button id="closeThemeModalBtn" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center">
+                        <i class="ph ph-x text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Widget Title Customizer -->
+                <div class="mb-4">
+                    <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Widget Header Name</label>
+                    <input id="customWidgetNameInput" type="text" maxlength="20" placeholder="My Space" class="w-full px-3.5 py-2 rounded-2xl bg-white/10 border border-white/15 text-sm text-white focus:outline-none focus:border-indigo-400">
+                </div>
+
+                <!-- Curated Gradient Presets -->
+                <div class="mb-4">
+                    <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">Gradient Themes</label>
+                    <div id="gradientPresetsGrid" class="grid grid-cols-4 gap-2.5">
+                <button type="button" onclick="selectPresetTheme('midnight')" title="Midnight Indigo" class="h-12 rounded-2xl border-2 border-white/25 hover:scale-105 transition shadow-md" style="background: linear-gradient(135deg, #1e1b4b 0%, #312e81 45%, #0f172a 100%);"></button>
+            
+                <button type="button" onclick="selectPresetTheme('aurora')" title="Emerald Aurora" class="h-12 rounded-2xl border-2 border-white/25 hover:scale-105 transition shadow-md" style="background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #0f172a 100%);"></button>
+            
+                <button type="button" onclick="selectPresetTheme('sunset')" title="Warm Sunset" class="h-12 rounded-2xl border-2 border-white/25 hover:scale-105 transition shadow-md" style="background: linear-gradient(135deg, #7c2d12 0%, #be185d 55%, #31102f 100%);"></button>
+            
+                <button type="button" onclick="selectPresetTheme('ocean')" title="Deep Ocean" class="h-12 rounded-2xl border-2 border-white/25 hover:scale-105 transition shadow-md" style="background: linear-gradient(135deg, #0c4a6e 0%, #0369a1 50%, #1e1b4b 100%);"></button>
+            
+                <button type="button" onclick="selectPresetTheme('royal')" title="Royal Plum" class="h-12 rounded-2xl border-2 border-white/25 hover:scale-105 transition shadow-md" style="background: linear-gradient(135deg, #4c1d95 0%, #6d28d9 50%, #1e1b4b 100%);"></button>
+            
+                <button type="button" onclick="selectPresetTheme('obsidian')" title="Pure Obsidian" class="h-12 rounded-2xl border-2 border-white/25 hover:scale-105 transition shadow-md" style="background: linear-gradient(135deg, #18181b 0%, #27272a 50%, #09090b 100%);"></button>
+            
+                <button type="button" onclick="selectPresetTheme('rose')" title="Soft Blossom" class="h-12 rounded-2xl border-2 border-white/25 hover:scale-105 transition shadow-md" style="background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #fbcfe8 100%);"></button>
+            
+                <button type="button" onclick="selectPresetTheme('cloud')" title="Nordic Frost" class="h-12 rounded-2xl border-2 border-white/25 hover:scale-105 transition shadow-md" style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);"></button>
+            </div>
+                </div>
+
+                <!-- Custom Dual Color Picker -->
+                <div class="mb-4">
+                    <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">Custom Two-Tone Blend</label>
+                    <div class="flex items-center gap-3 bg-white/10 p-2.5 rounded-2xl border border-white/10">
+                        <div class="flex items-center gap-2 flex-1">
+                            <input type="color" id="customColor1" value="#4f46e5" class="w-8 h-8 rounded-lg cursor-pointer bg-transparent border-0">
+                            <span class="text-xs text-slate-300">Start</span>
+                        </div>
+                        <div class="flex items-center gap-2 flex-1">
+                            <input type="color" id="customColor2" value="#0f172a" class="w-8 h-8 rounded-lg cursor-pointer bg-transparent border-0">
+                            <span class="text-xs text-slate-300">End</span>
+                        </div>
+                        <button id="applyCustomColorsBtn" class="px-3 py-1.5 rounded-xl bg-white text-slate-900 text-xs font-bold hover:bg-slate-200 transition">Apply</button>
+                    </div>
+                </div>
+
+                <!-- Custom Photo / Wallpaper Background -->
+                <div class="mb-3">
+                    <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">Wallpaper Image</label>
+                    <div class="flex items-center gap-2">
+                        <label class="flex-1 cursor-pointer py-2.5 px-3 rounded-2xl bg-white/10 hover:bg-white/15 border border-dashed border-white/30 text-xs font-semibold flex items-center justify-center gap-2 transition">
+                            <i class="ph ph-image text-base text-indigo-300"></i>
+                            <span>Upload Photo</span>
+                            <input type="file" id="bgImageUploadInput" accept="image/*" class="hidden">
+                        </label>
+                        <button id="clearBgImageBtn" class="px-3 py-2.5 rounded-2xl bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 text-xs font-semibold transition">
+                            Clear Photo
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <button id="doneThemeBtn" class="w-full py-3 rounded-2xl bg-white text-slate-900 font-bold text-sm shadow-lg transition active:scale-98 mt-2">
+                Done
+            </button>
+        </div>
+
+        <!-- Custom Toast Notification inside Widget -->
+        <div id="widgetToast" class="pointer-events-none opacity-0 transition-all duration-300 absolute bottom-14 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-slate-900/95 text-white text-xs font-semibold shadow-xl border border-white/15 whitespace-nowrap">
+            Saved!
+        </div>
+    </main>
+
+    <!-- ADD TO HOME SCREEN INSTRUCTIONS MODAL (Outside Widget) -->
+    <div id="installGuideModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 text-slate-100 shadow-2xl max-h-[90vh] overflow-y-auto no-scrollbar">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-2xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
+                        <i class="ph-fill ph-app-window text-xl"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg">Install Standalone App</h3>
+                </div>
+                <button id="closeInstallGuideBtn" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center">
+                    <i class="ph ph-x"></i>
+                </button>
+            </div>
+
+            <!-- Direct Native PWA Install Button (Appears when Chrome triggers beforeinstallprompt) -->
+            <button id="nativeInstallBtn" class="hidden w-full mb-4 py-3 px-4 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 transition active:scale-95">
+                <i class="ph-bold ph-download-simple text-base"></i>
+                <span>Install VibeNote App Now</span>
+            </button>
+            
+            <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                Why did it open inside Chrome? Mobile browsers require an <strong class="text-white">HTTPS link</strong> (not a local <code>file://</code> or preview sandbox) to launch in full-screen standalone app mode.
+            </p>
+
+            <div class="space-y-2.5 text-xs">
+                <div class="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30">
+                    <p class="font-bold text-amber-300 mb-1 flex items-center gap-1.5">
+                        <i class="ph-fill ph-sparkle text-sm"></i> Step 1: Host on HTTPS (Free &amp; 10 Seconds)
+                    </p>
+                    <p class="text-slate-300 leading-relaxed">
+                        Download this HTML file and drop it onto <strong>Netlify Drop</strong> (<code>app.netlify.com/drop</code>), <strong>Vercel</strong>, or <strong>GitHub Pages</strong>, then open that HTTPS link in Chrome.
+                    </p>
+                    <button id="downloadWidgetHtmlBtn" class="mt-2.5 w-full py-2 px-3 rounded-xl bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 font-semibold flex items-center justify-center gap-1.5 transition">
+                        <i class="ph-bold ph-file-html text-sm"></i>
+                        <span>Download Standalone HTML File</span>
+                    </button>
+                </div>
+
+                <div class="p-3 rounded-2xl bg-slate-800/70 border border-slate-700/60">
+                    <p class="font-bold text-emerald-300 mb-1 flex items-center gap-1.5">
+                        <i class="ph-fill ph-android-logo text-sm"></i> Step 2: Android (Chrome)
+                    </p>
+                    <p class="text-slate-300">Open your HTTPS link in Chrome, tap <strong>⋮ (Menu)</strong> → <strong>"Install app"</strong> (instead of creating a plain bookmark shortcut).</p>
+                </div>
+
+                <div class="p-3 rounded-2xl bg-slate-800/70 border border-slate-700/60">
+                    <p class="font-bold text-indigo-300 mb-1 flex items-center gap-1.5">
+                        <i class="ph-fill ph-apple-logo text-sm"></i> Step 2: iPhone / iPad (Safari)
+                    </p>
+                    <p class="text-slate-300">Open your HTTPS link in Safari, tap <strong>Share</strong> → <strong>"Add to Home Screen"</strong>.</p>
+                </div>
+            </div>
+
+            <button id="gotItInstallBtn" class="mt-4 w-full py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 font-bold text-xs text-white transition">
+                Got it!
+            </button>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * VibeNote Home Screen Widget Application
+         * Handles state persistence (localStorage), slide navigation (touch + click),
+         * note & task CRUD operations, and customizable widget themes/backgrounds.
+         */
+
+        // ==========================================
+        // 1. STATE & DEFAULT DATA
+        // ==========================================
+        const STORAGE_KEY = 'vibenote_widget_state_v1';
+
+        const GRADIENT_PRESETS = [
+            { id: 'midnight', name: 'Midnight Indigo', css: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 45%, #0f172a 100%)', lightText: true },
+            { id: 'aurora', name: 'Emerald Aurora', css: 'linear-gradient(135deg, #064e3b 0%, #047857 50%, #0f172a 100%)', lightText: true },
+            { id: 'sunset', name: 'Warm Sunset', css: 'linear-gradient(135deg, #7c2d12 0%, #be185d 55%, #31102f 100%)', lightText: true },
+            { id: 'ocean', name: 'Deep Ocean', css: 'linear-gradient(135deg, #0c4a6e 0%, #0369a1 50%, #1e1b4b 100%)', lightText: true },
+            { id: 'royal', name: 'Royal Plum', css: 'linear-gradient(135deg, #4c1d95 0%, #6d28d9 50%, #1e1b4b 100%)', lightText: true },
+            { id: 'obsidian', name: 'Pure Obsidian', css: 'linear-gradient(135deg, #18181b 0%, #27272a 50%, #09090b 100%)', lightText: true },
+            { id: 'rose', name: 'Soft Blossom', css: 'linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #fbcfe8 100%)', lightText: false },
+            { id: 'cloud', name: 'Nordic Frost', css: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%)', lightText: false }
+        ];
+
+        const todayStr = (() => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); })();
+
+        const defaultState = {
+            widgetName: 'My Space',
+            currentSlide: 0,
+            scratchpad: 'Pick up cold brew on the way to the studio ✨',
+            theme: {
+                bgCss: GRADIENT_PRESETS[0].css,
+                lightText: true,
+                bgImage: null
+            },
+            notes: [
+                {
+                    id: 'n1',
+                    title: 'Weekly Focus Goals',
+                    body: '1. Finish widget UI polish\n2. Review design tokens\n3. Evening walk at 6 PM',
+                    pinned: true,
+                    createdAt: 'Today'
+                },
+                {
+                    id: 'n2',
+                    title: 'Book Ideas',
+                    body: 'Atomic Habits & The Creative Act — take notes on environment design.',
+                    pinned: false,
+                    createdAt: 'Yesterday'
+                }
+            ],
+            tasks: [
+                {
+                    id: 't1',
+                    title: 'Design Sync & Prototype Review',
+                    date: todayStr,
+                    time: '14:30',
+                    priority: 'Important',
+                    completed: false
+                },
+                {
+                    id: 't2',
+                    title: 'Evening Workout & Stretch',
+                    date: todayStr,
+                    time: '18:00',
+                    priority: 'Normal',
+                    completed: false
+                },
+                {
+                    id: 't3',
+                    title: 'Submit Sprint Summary',
+                    date: todayStr,
+                    time: '20:00',
+                    priority: 'Urgent',
+                    completed: true
+                }
+            ]
+        };
+
+        let appState = loadState();
+        let activeModalType = 'note'; // 'note' or 'task'
+        let selectedPriority = 'Normal';
+
+        function loadState() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return structuredClone(defaultState);
+                const parsed = JSON.parse(raw);
+                return { ...structuredClone(defaultState), ...parsed };
+            } catch (e) {
+                console.warn('Could not load state from localStorage:', e);
+                return structuredClone(defaultState);
+            }
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+            } catch (e) {
+                console.warn('Could not save state (storage might be full if large image):', e);
+                showToast('Storage full! Try a smaller photo.');
+            }
+        }
+
+        // ==========================================
+        // 2. DOM REFERENCES & INITIALIZATION
+        // ==========================================
+        const widgetContainer = document.getElementById('widgetContainer');
+        const widgetBgImageLayer = document.getElementById('widgetBgImageLayer');
+        const widgetScrimLayer = document.getElementById('widgetScrimLayer');
+        const widgetTitle = document.getElementById('widgetTitle');
+        const widgetDateDisplay = document.getElementById('widgetDateDisplay');
+        const pendingBadge = document.getElementById('pendingBadge');
+        const slideTrack = document.getElementById('slideTrack');
+        const slideTabs = document.querySelectorAll('.slide-tab');
+        const slideDots = document.querySelectorAll('.slide-dot');
+        const quickScratchpad = document.getElementById('quickScratchpad');
+
+        function init() {
+            updateHeaderDate();
+            applyWidgetTheme();
+            renderGradientPresets();
+            renderAllContent();
+            switchSlide(appState.currentSlide || 0, false);
+            setupSwipeGestures();
+            setupEventListeners();
+            
+            registerInlineServiceWorker();
+            setupInstallPrompt();
+        }
+
+        function updateHeaderDate() {
+            const now = new Date();
+            const options = { weekday: 'long', month: 'short', day: 'numeric' };
+            widgetDateDisplay.textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        // ==========================================
+        // 3. SLIDE NAVIGATION & SWIPE SUPPORT
+        // ==========================================
+        function switchSlide(index, persist = true) {
+            const clampedIndex = Math.max(0, Math.min(2, index));
+            appState.currentSlide = clampedIndex;
+            if (persist) saveState();
+
+            // Translate track
+            slideTrack.style.transform = `translateX(-${clampedIndex * (100 / 3)}%)`;
+
+            // Update segmented tabs
+            slideTabs.forEach((tab, idx) => {
+                if (idx === clampedIndex) {
+                    tab.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
+                    tab.classList.remove('opacity-80');
+                } else {
+                    tab.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
+                    tab.classList.add('opacity-80');
+                }
+            });
+
+            // Update bottom indicator dots
+            slideDots.forEach((dot, idx) => {
+                if (idx === clampedIndex) {
+                    dot.classList.remove('w-1.5', 'bg-white/40');
+                    dot.classList.add('w-5', 'bg-white');
+                } else {
+                    dot.classList.remove('w-5', 'bg-white');
+                    dot.classList.add('w-1.5', 'bg-white/40');
+                }
+            });
+        }
+
+        function setupSwipeGestures() {
+            const viewport = document.getElementById('slideViewport');
+            let startX = 0;
+            let startY = 0;
+            let isDragging = false;
+
+            viewport.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                isDragging = true;
+            }, { passive: true });
+
+            viewport.addEventListener('touchend', (e) => {
+                if (!isDragging) return;
+                isDragging = false;
+                const endX = e.changedTouches[0].clientX;
+                const endY = e.changedTouches[0].clientY;
+                const diffX = endX - startX;
+                const diffY = endY - startY;
+
+                // Ensure horizontal swipe dominates vertical scroll
+                if (Math.abs(diffX) > 45 && Math.abs(diffX) > Math.abs(diffY) * 1.2) {
+                    if (diffX < 0 && appState.currentSlide < 2) {
+                        switchSlide(appState.currentSlide + 1);
+                    } else if (diffX > 0 && appState.currentSlide > 0) {
+                        switchSlide(appState.currentSlide - 1);
+                    }
+                }
+            }, { passive: true });
+        }
+
+        // ==========================================
+        // 4. RENDERING NOTES & SCHEDULED TASKS
+        // ==========================================
+        function renderAllContent() {
+            widgetTitle.textContent = appState.widgetName || 'My Space';
+            quickScratchpad.value = appState.scratchpad || '';
+
+            const pendingCount = appState.tasks.filter(t => !t.completed).length;
+            pendingBadge.textContent = `${pendingCount} task${pendingCount === 1 ? '' : 's'}`;
+
+            renderOverview();
+            renderNotesList();
+            renderScheduleList();
+        }
+
+        function renderOverview() {
+            // 1. Pinned Note
+            const pinnedContainer = document.getElementById('overviewPinnedNote');
+            const pinnedNote = appState.notes.find(n => n.pinned) || appState.notes[0];
+            if (pinnedNote) {
+                pinnedContainer.innerHTML = `
+                    <div class="font-bold text-sm mb-0.5">${escapeHtml(pinnedNote.title)}</div>
+                    <div class="text-xs opacity-85 line-clamp-3 whitespace-pre-line">${escapeHtml(pinnedNote.body)}</div>
+                `;
+            } else {
+                pinnedContainer.innerHTML = `<span class="text-xs opacity-75">No notes yet. Tap + to create your first note!</span>`;
+            }
+
+            // 2. Upcoming Tasks (up to 3 incomplete or recent)
+            const overviewTasksList = document.getElementById('overviewTasksList');
+            const sortedTasks = [...appState.tasks].sort((a, b) => Number(a.completed) - Number(b.completed));
+
+            if (sortedTasks.length === 0) {
+                overviewTasksList.innerHTML = `<div class="text-xs opacity-70 py-4 text-center">All clear! No scheduled tasks.</div>`;
+                return;
+            }
+
+            overviewTasksList.innerHTML = sortedTasks.slice(0, 4).map(task => `
+                <div class="flex items-center justify-between gap-2.5 p-2.5 rounded-2xl bg-black/15 hover:bg-black/25 transition">
+                    <button onclick="toggleTask('${task.id}')" class="flex items-center gap-2.5 text-left flex-1 min-w-0">
+                        <span class="w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition ${task.completed ? 'bg-emerald-400 border-emerald-400 text-slate-950' : 'border-current/50'}">
+                            ${task.completed ? '<i class="ph-bold ph-check text-xs"></i>' : ''}
+                        </span>
+                        <span class="text-xs font-medium truncate ${task.completed ? 'line-through opacity-55' : ''}">${escapeHtml(task.title)}</span>
+                    </button>
+                    <span class="text-[10px] font-semibold px-2 py-0.5 rounded-lg bg-white/15 shrink-0">
+                        ${formatTime12h(task.time)}
+                    </span>
+                </div>
+            `).join('');
+        }
+
+        function renderNotesList() {
+            const container = document.getElementById('notesListContainer');
+            if (appState.notes.length === 0) {
+                container.innerHTML = `
+                    <div class="rounded-3xl p-6 glass-panel text-center">
+                        <p class="text-xs opacity-80">Your notes list is empty.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort pinned first
+            const sortedNotes = [...appState.notes].sort((a, b) => Number(b.pinned) - Number(a.pinned));
+
+            container.innerHTML = sortedNotes.map(note => `
+                <div class="rounded-3xl p-4 glass-panel transition hover:bg-white/20">
+                    <div class="flex items-start justify-between gap-2 mb-1.5">
+                        <h3 class="font-bold text-sm leading-snug">${escapeHtml(note.title)}</h3>
+                        <div class="flex items-center gap-1 shrink-0">
+                            <button onclick="togglePinNote('${note.id}')" title="Pin to Overview" class="w-7 h-7 rounded-xl hover:bg-white/20 flex items-center justify-center transition ${note.pinned ? 'text-amber-300' : 'opacity-60'}">
+                                <i class="${note.pinned ? 'ph-fill' : 'ph'} ph-push-pin text-sm"></i>
+                            </button>
+                            <button onclick="deleteNote('${note.id}')" title="Delete Note" class="w-7 h-7 rounded-xl hover:bg-rose-500/30 text-rose-300 flex items-center justify-center transition">
+                                <i class="ph ph-trash text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-xs opacity-85 whitespace-pre-line leading-relaxed">${escapeHtml(note.body)}</p>
+                </div>
+            `).join('');
+        }
+
+        function renderScheduleList() {
+            const container = document.getElementById('scheduleListContainer');
+            if (appState.tasks.length === 0) {
+                container.innerHTML = `
+                    <div class="rounded-3xl p-6 glass-panel text-center">
+                        <p class="text-xs opacity-80">No tasks scheduled. Tap "Schedule Task" above.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const sortedTasks = [...appState.tasks].sort((a, b) => {
+                if (a.completed !== b.completed) return Number(a.completed) - Number(b.completed);
+                return `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`);
+            });
+
+            container.innerHTML = sortedTasks.map(task => {
+                const badgeColor = task.priority === 'Urgent'
+                    ? 'bg-rose-500/30 text-rose-200 border-rose-400/40'
+                    : task.priority === 'Important'
+                        ? 'bg-amber-500/30 text-amber-200 border-amber-400/40'
+                        : 'bg-white/15 text-current border-white/20';
+
+                return `
+                    <div class="rounded-3xl p-3.5 glass-panel flex items-center justify-between gap-3 transition">
+                        <button onclick="toggleTask('${task.id}')" class="flex items-start gap-3 text-left flex-1 min-w-0">
+                            <span class="mt-0.5 w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition ${task.completed ? 'bg-emerald-400 border-emerald-400 text-slate-950' : 'border-current/60'}">
+                                ${task.completed ? '<i class="ph-bold ph-check text-xs"></i>' : ''}
+                            </span>
+                            <div class="min-w-0 flex-1">
+                                <div class="text-sm font-semibold truncate ${task.completed ? 'line-through opacity-55' : ''}">${escapeHtml(task.title)}</div>
+                                <div class="flex items-center gap-2 mt-1 text-[11px] opacity-80">
+                                    <span class="flex items-center gap-1"><i class="ph ph-clock"></i> ${formatTime12h(task.time)}</span>
+                                    <span>•</span>
+                                    <span>${formatFriendlyDate(task.date)}</span>
+                                </div>
+                            </div>
+                        </button>
+                        <div class="flex flex-col items-end gap-1.5 shrink-0">
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border ${badgeColor}">${task.priority}</span>
+                            <button onclick="deleteTask('${task.id}')" class="text-xs opacity-60 hover:opacity-100 hover:text-rose-300 transition p-1">
+                                <i class="ph ph-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ==========================================
+        // 5. CRUD ACTIONS (NOTES & TASKS)
+        // ==========================================
+        window.toggleTask = function(id) {
+            const task = appState.tasks.find(t => t.id === id);
+            if (task) {
+                task.completed = !task.completed;
+                saveState();
+                renderAllContent();
+            }
+        };
+
+        window.deleteTask = function(id) {
+            appState.tasks = appState.tasks.filter(t => t.id !== id);
+            saveState();
+            renderAllContent();
+            showToast('Task removed');
+        };
+
+        window.togglePinNote = function(id) {
+            appState.notes.forEach(n => {
+                n.pinned = (n.id === id) ? !n.pinned : false;
+            });
+            saveState();
+            renderAllContent();
+            showToast('Pinned note updated');
+        };
+
+        window.deleteNote = function(id) {
+            appState.notes = appState.notes.filter(n => n.id !== id);
+            saveState();
+            renderAllContent();
+            showToast('Note deleted');
+        };
+
+        // ==========================================
+        // 6. CUSTOMIZABLE BACKGROUND & THEME ENGINE
+        // ==========================================
+        function applyWidgetTheme() {
+            const { bgCss, lightText, bgImage } = appState.theme;
+            widgetContainer.style.background = bgCss;
+
+            if (bgImage) {
+                widgetBgImageLayer.style.backgroundImage = `url(${bgImage})`;
+                widgetBgImageLayer.style.opacity = '1';
+                widgetScrimLayer.style.opacity = '1';
+                // Force readable white text over custom photos with scrim
+                widgetContainer.classList.remove('text-slate-900');
+                widgetContainer.classList.add('text-white');
+            } else {
+                widgetBgImageLayer.style.opacity = '0';
+                widgetScrimLayer.style.opacity = lightText ? '0.2' : '0';
+                if (lightText) {
+                    widgetContainer.classList.remove('text-slate-900');
+                    widgetContainer.classList.add('text-white');
+                } else {
+                    widgetContainer.classList.remove('text-white');
+                    widgetContainer.classList.add('text-slate-900');
+                }
+            }
+        }
+
+        function renderGradientPresets() {
+            const grid = document.getElementById('gradientPresetsGrid');
+            grid.innerHTML = GRADIENT_PRESETS.map(preset => `
+                <button type="button" onclick="selectPresetTheme('${preset.id}')" title="${preset.name}" class="h-12 rounded-2xl border-2 border-white/25 hover:scale-105 transition shadow-md" style="background: ${preset.css};"></button>
+            `).join('');
+        }
+
+        window.selectPresetTheme = function(presetId) {
+            const preset = GRADIENT_PRESETS.find(p => p.id === presetId);
+            if (!preset) return;
+            appState.theme.bgCss = preset.css;
+            appState.theme.lightText = preset.lightText;
+            appState.theme.bgImage = null;
+            saveState();
+            applyWidgetTheme();
+            showToast(`Theme: ${preset.name}`);
+        };
+
+        // ==========================================
+        // 7. MODAL & EVENT LISTENERS
+        // ==========================================
+        window.openAddModal = function(defaultType = 'note') {
+            activeModalType = defaultType;
+            document.getElementById('itemTitleInput').value = '';
+            document.getElementById('itemBodyInput').value = '';
+            document.getElementById('taskDateInput').value = todayStr;
+            document.getElementById('taskTimeInput').value = '17:00';
+            switchModalItemType(defaultType);
+            document.getElementById('addModal').classList.remove('hidden');
+        };
+
+        function switchModalItemType(type) {
+            activeModalType = type;
+            const typeNoteBtn = document.getElementById('typeNoteBtn');
+            const typeTaskBtn = document.getElementById('typeTaskBtn');
+            const noteBodyGroup = document.getElementById('noteBodyGroup');
+            const taskScheduleGroup = document.getElementById('taskScheduleGroup');
+
+            if (type === 'note') {
+                typeNoteBtn.classList.add('bg-white', 'text-slate-900');
+                typeNoteBtn.classList.remove('text-white/80');
+                typeTaskBtn.classList.remove('bg-white', 'text-slate-900');
+                typeTaskBtn.classList.add('text-white/80');
+                noteBodyGroup.classList.remove('hidden');
+                taskScheduleGroup.classList.add('hidden');
+            } else {
+                typeTaskBtn.classList.add('bg-white', 'text-slate-900');
+                typeTaskBtn.classList.remove('text-white/80');
+                typeNoteBtn.classList.remove('bg-white', 'text-slate-900');
+                typeNoteBtn.classList.add('text-white/80');
+                taskScheduleGroup.classList.remove('hidden');
+                noteBodyGroup.classList.add('hidden');
+            }
+        }
+
+        function setupEventListeners() {
+            // Segmented Tabs
+            slideTabs.forEach((tab, idx) => {
+                tab.addEventListener('click', () => switchSlide(idx));
+            });
+
+            // Auto-save Scratchpad
+            let scratchTimeout;
+            quickScratchpad.addEventListener('input', (e) => {
+                appState.scratchpad = e.target.value;
+                document.getElementById('scratchSavedIndicator').textContent = 'Saving...';
+                clearTimeout(scratchTimeout);
+                scratchTimeout = setTimeout(() => {
+                    saveState();
+                    document.getElementById('scratchSavedIndicator').textContent = 'Auto-saved';
+                }, 400);
+            });
+
+            // Open / Close Add Modal
+            document.getElementById('openAddModalBtn').addEventListener('click', () => {
+                const defaultType = appState.currentSlide === 2 ? 'task' : 'note';
+                openAddModal(defaultType);
+            });
+            document.getElementById('closeAddModalBtn').addEventListener('click', () => {
+                document.getElementById('addModal').classList.add('hidden');
+            });
+
+            document.getElementById('typeNoteBtn').addEventListener('click', () => switchModalItemType('note'));
+            document.getElementById('typeTaskBtn').addEventListener('click', () => switchModalItemType('task'));
+
+            // Priority Buttons
+            document.querySelectorAll('.priority-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    selectedPriority = btn.dataset.priority;
+                    document.querySelectorAll('.priority-btn').forEach(b => {
+                        b.classList.remove('bg-indigo-500/30', 'border-indigo-400', 'font-semibold');
+                        b.classList.add('bg-white/10', 'border-transparent', 'text-slate-300');
+                    });
+                    btn.classList.add('bg-indigo-500/30', 'border-indigo-400', 'font-semibold');
+                    btn.classList.remove('bg-white/10', 'border-transparent', 'text-slate-300');
+                });
+            });
+
+            // Save Item (Note or Scheduled Task)
+            document.getElementById('saveItemBtn').addEventListener('click', () => {
+                const title = document.getElementById('itemTitleInput').value.trim();
+                if (!title) {
+                    showToast('Please enter a title first');
+                    return;
+                }
+
+                if (activeModalType === 'note') {
+                    const body = document.getElementById('itemBodyInput').value.trim() || 'Quick note';
+                    appState.notes.unshift({
+                        id: 'n_' + Date.now(),
+                        title,
+                        body,
+                        pinned: appState.notes.length === 0,
+                        createdAt: 'Just now'
+                    });
+                    switchSlide(1);
+                    showToast('Note added!');
+                } else {
+                    const date = document.getElementById('taskDateInput').value || todayStr;
+                    const time = document.getElementById('taskTimeInput').value || '12:00';
+                    appState.tasks.push({
+                        id: 't_' + Date.now(),
+                        title,
+                        date,
+                        time,
+                        priority: selectedPriority,
+                        completed: false
+                    });
+                    switchSlide(2);
+                    showToast('Task scheduled!');
+                }
+
+                saveState();
+                renderAllContent();
+                document.getElementById('addModal').classList.add('hidden');
+            });
+
+            // Theme Modal Controls
+            document.getElementById('openThemeModalBtn').addEventListener('click', () => {
+                document.getElementById('customWidgetNameInput').value = appState.widgetName;
+                document.getElementById('themeModal').classList.remove('hidden');
+            });
+            document.getElementById('closeThemeModalBtn').addEventListener('click', () => {
+                document.getElementById('themeModal').classList.add('hidden');
+            });
+            document.getElementById('doneThemeBtn').addEventListener('click', () => {
+                const newName = document.getElementById('customWidgetNameInput').value.trim();
+                if (newName) {
+                    appState.widgetName = newName;
+                    saveState();
+                    renderAllContent();
+                }
+                document.getElementById('themeModal').classList.add('hidden');
+            });
+
+            // Custom Two-Tone Gradient
+            document.getElementById('applyCustomColorsBtn').addEventListener('click', () => {
+                const c1 = document.getElementById('customColor1').value;
+                const c2 = document.getElementById('customColor2').value;
+                appState.theme.bgCss = `linear-gradient(135deg, ${c1} 0%, ${c2} 100%)`;
+                appState.theme.lightText = true;
+                appState.theme.bgImage = null;
+                saveState();
+                applyWidgetTheme();
+                showToast('Custom gradient applied!');
+            });
+
+            // Custom Photo Upload (Resized via Canvas to fit localStorage cleanly)
+            document.getElementById('bgImageUploadInput').addEventListener('change', (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const maxDim = 900;
+                        let w = img.width;
+                        let h = img.height;
+                        if (w > maxDim || h > maxDim) {
+                            if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+                            else { w = Math.round((w * maxDim) / h); h = maxDim; }
+                        }
+                        canvas.width = w;
+                        canvas.height = h;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, w, h);
+                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.78);
+                        appState.theme.bgImage = compressedDataUrl;
+                        saveState();
+                        applyWidgetTheme();
+                        showToast('Wallpaper updated!');
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+
+            document.getElementById('clearBgImageBtn').addEventListener('click', () => {
+                appState.theme.bgImage = null;
+                saveState();
+                applyWidgetTheme();
+                showToast('Wallpaper cleared');
+            });
+
+            // Add to Home Screen Guide Modal
+            document.getElementById('openInstallGuideBtn').addEventListener('click', () => {
+                document.getElementById('installGuideModal').classList.remove('hidden');
+            });
+            document.getElementById('closeInstallGuideBtn').addEventListener('click', () => {
+                document.getElementById('installGuideModal').classList.add('hidden');
+            });
+            document.getElementById('gotItInstallBtn').addEventListener('click', () => {
+                document.getElementById('installGuideModal').classList.add('hidden');
+            });
+            document.getElementById('downloadWidgetHtmlBtn').addEventListener('click', () => {
+                const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+                const blob = new Blob([htmlContent], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'index.html';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showToast('Downloaded index.html!');
+            });
+        }
+
+        // ==========================================
+        // 8. HELPERS & PWA MANIFEST INJECTION
+        // ==========================================
+        function showToast(message) {
+            const toast = document.getElementById('widgetToast');
+            toast.textContent = message;
+            toast.classList.remove('opacity-0');
+            toast.classList.add('opacity-100');
+            clearTimeout(window._toastTimer);
+            window._toastTimer = setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0');
+            }, 2000);
+        }
+
+        function formatTime12h(time24) {
+            if (!time24) return '';
+            const [hStr, mStr] = time24.split(':');
+            let h = parseInt(hStr, 10);
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            h = h % 12 || 12;
+            return `${h}:${mStr} ${ampm}`;
+        }
+
+        function formatFriendlyDate(dateStr) {
+            if (!dateStr) return 'Today';
+            if (dateStr === todayStr) return 'Today';
+            const d = new Date(dateStr + 'T00:00:00');
+            return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        // Register the real service worker (offline support after the first visit)
+        function registerInlineServiceWorker() {
+            if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+                navigator.serviceWorker.register('widget-sw.js').catch(() => {});
+            }
+        }
+        // Capture Chrome's native beforeinstallprompt event to show a 1-tap "Install VibeNote App Now" button
+        let deferredInstallPrompt = null;
+        function setupInstallPrompt() {
+            const nativeInstallBtn = document.getElementById('nativeInstallBtn');
+            const openGuideBtn = document.getElementById('openInstallGuideBtn');
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredInstallPrompt = e;
+                nativeInstallBtn.classList.remove('hidden');
+                openGuideBtn.innerHTML = `<i class="ph-bold ph-download-simple text-sm"></i><span>Install App</span>`;
+            });
+
+            nativeInstallBtn.addEventListener('click', async () => {
+                if (!deferredInstallPrompt) return;
+                deferredInstallPrompt.prompt();
+                const { outcome } = await deferredInstallPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    nativeInstallBtn.classList.add('hidden');
+                    showToast('Installing VibeNote...');
+                }
+                deferredInstallPrompt = null;
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+
+</body></html>
